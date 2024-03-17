@@ -1,0 +1,47 @@
+{
+  "name": "polyline-splitter",
+  "version": "0.0.1",
+  "type": "module",
+  "description": "Split polylines by other polylines.",
+  "main": "dist/polylineSplitter.js",
+  "module": "dist/polylineSplitter.mjs",
+  "unpkg": "dist/polylineSplitter.min.js",
+  "exports": "./dist/polylineSplitter.mjs",
+  "scripts": {
+    "build": "rollup -c",
+    "test": "vitest --dir test"
+  },
+  "author": "Rowan Winsemius",
+  "repository": {
+    "url": "git+https://github.com/rowanwins/polyline-splitter.git",
+    "type": "git"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@rollup/plugin-buble": "^0.21.3",
+    "@rollup/plugin-commonjs": "^21.0.1",
+    "@rollup/plugin-node-resolve": "^13.0.6",
+    "@rollup/plugin-typescript": "^11.1.5",
+    "eslint": "^8.54.0",
+    "eslint-config-standard": "^17.1.0",
+    "geojson-equality": "^0.2.0",
+    "glob": "^8.0.3",
+    "load-json-file": "^4.0.0",
+    "rollup-plugin-terser": "^7.0.2",
+    "tslib": "^2.6.2",
+    "vitest": "^0.34.6",
+    "write-json-file": "^4.3.0"
+  },
+  "dependencies": {
+    "@turf/meta": "^6.5.0",
+    "@types/geojson": "^7946.0.13",
+    "ts-node": "^10.9.1",
+    "tsx": "^4.6.1",
+    "typescript": "^5.3.2"
+  },
+  "keywords": [
+    "geojson",
+    "polyline",
+    "split"
+  ]
+}
