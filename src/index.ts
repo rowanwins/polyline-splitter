@@ -4,16 +4,17 @@ import { fillQueue } from './fillQueue.js'
 import { findIntersectionPoints } from './findIntersections.js'
 import { BBox, Feature, LineString, MultiLineString, Position } from 'geojson'
 
-export default function polylineSplitter (line1: Feature<LineString> | LineString, line2: Feature<LineString> | LineString) {
+export type LineStringOrMultiLineStringFeature =  Feature<LineString | MultiLineString> | LineString | MultiLineString
+
+export default function polylineSplitter (line1: LineStringOrMultiLineStringFeature, line2: LineStringOrMultiLineStringFeature): LineStringOrMultiLineStringFeature {
   const intersections = [] as IntersectionPoint[]
   const line1Edges = [] as Edge[]
   const line2Edges = [] as Edge[]
-  const line1Bbox = [Infinity, Infinity, Infinity, Infinity] as BBox
+  const line1Bbox = [Infinity, Infinity, -Infinity, -Infinity] as BBox
 
   fillQueue(line1, line2, line1Edges, line2Edges, line1Bbox)
 
   findIntersectionPoints(line1Edges, line2Edges, intersections)
-
   if (intersections.length === 0) {
     return line1
   }
@@ -25,7 +26,7 @@ export default function polylineSplitter (line1: Feature<LineString> | LineStrin
   return {
     type: 'MultiLineString',
     coordinates: outLine
-  } as MultiLineString
+  }
 }
 
 function processLineSegments (lineEdges: Edge[], allPortions: Position[][]) {
