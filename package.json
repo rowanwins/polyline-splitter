@@ -8,6 +8,7 @@
   "unpkg": "dist/polylineSplitter.min.js",
   "exports": "./dist/polylineSplitter.mjs",
   "scripts": {
+    "dev": "vite serve debug",
     "build": "rollup -c",
     "test": "vitest --dir test"
   },
@@ -33,11 +34,15 @@
     "write-json-file": "^4.3.0"
   },
   "dependencies": {
+    "@rollup/pluginutils": "^5.1.0",
     "@turf/meta": "^6.5.0",
     "@types/geojson": "^7946.0.13",
+    "@vitejs/plugin-vue": "^5.0.5",
+    "leaflet": "^1.9.4",
     "ts-node": "^10.9.1",
     "tsx": "^4.6.1",
-    "typescript": "^5.3.2"
+    "typescript": "^5.3.2",
+    "vite": "^5.2.12"
   },
   "keywords": [
     "geojson",

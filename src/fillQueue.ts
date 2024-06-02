@@ -12,7 +12,13 @@ export function fillQueue(line1: LineStringOrMultiLineStringFeature, line2: Line
 function processLine (line: LineStringOrMultiLineStringFeature, edges: Edge[], line1Bbox: BBox, fillBbox: boolean) {
   let startPoint = null as null | Point
   let prevEdge = null as null | Edge
-  segmentEach(line, function (currentSegment) {
+  let prevMultiFeatureIndex = 0
+  segmentEach(line, function (currentSegment, featureIndex, multiFeatureIndex, geometryIndex, segmentIndex) {
+    if (multiFeatureIndex && multiFeatureIndex !== prevMultiFeatureIndex) {
+      prevEdge = null
+      startPoint = null
+      prevMultiFeatureIndex = multiFeatureIndex
+    }
     if (currentSegment) {
       if (startPoint === null && currentSegment) startPoint = new Point(currentSegment.geometry.coordinates[0])
       if (startPoint) {

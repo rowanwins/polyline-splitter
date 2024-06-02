@@ -7,14 +7,13 @@ import { BBox, Feature, LineString, MultiLineString, Position } from 'geojson'
 export type LineStringOrMultiLineStringFeature =  Feature<LineString | MultiLineString> | LineString | MultiLineString
 
 export default function polylineSplitter (line1: LineStringOrMultiLineStringFeature, line2: LineStringOrMultiLineStringFeature): LineStringOrMultiLineStringFeature {
-  const intersections = [] as IntersectionPoint[]
-  const line1Edges = [] as Edge[]
-  const line2Edges = [] as Edge[]
+  const intersections: IntersectionPoint[] = []
+  const line1Edges: Edge[] = [] 
+  const line2Edges: Edge[] = []
   const line1Bbox = [Infinity, Infinity, -Infinity, -Infinity] as BBox
-
   fillQueue(line1, line2, line1Edges, line2Edges, line1Bbox)
-
   findIntersectionPoints(line1Edges, line2Edges, intersections)
+
   if (intersections.length === 0) {
     return line1
   }
@@ -60,43 +59,30 @@ function processLineSegments (lineEdges: Edge[], allPortions: Position[][]) {
         }
       }
     }
-    lastEdge = e
-  })
-  if (lastEdge) {
-    if (!lastEdge.p2.isSamePoint(portionLine[0])) {
-      portionLine.push(lastEdge.p2.p)
-      allPortions.push(portionLine)      
+
+    if (e.nextEdge === null) {
+      if (!e.p2.isSamePoint(portionLine[0])) {
+        portionLine.push(e.p2.p)
+      }
+      if (portionLine.length > 1) {
+        allPortions.push(portionLine)
+      }
+      portionLine = []
+      lastEdge = null
+    } else {
+      lastEdge = e
     }
-  }
+  })
+
+  tidyEndOfLine(lastEdge, portionLine, allPortions)
   portionLine = []
 }
 
-// function walkPolylineForwards(intersectionPoint, outPoly) {
-//   let nextEdge = intersectionPoint.polylineEdge
-//   console.log('walking polyline fowards')
-
-//   if (nextEdge.intersectionPoints.length > 1) {
-//     // _debugIntersectionPoint(intersectionPoint)
-//     const lastPointOnEdge = nextEdge.intersectionPoints[nextEdge.intersectionPoints.length - 1]
-//     if (!lastPointOnEdge.isSamePoint(intersectionPoint.p)) {
-//       let currentIndex = findIndexOfIntersectionPoint(intersectionPoint, nextEdge.intersectionPoints)
-//       let nextIp = nextEdge.intersectionPoints[currentIndex + 1]
-//       outPoly.push(nextIp.p)
-//       nextIp.incrementVisitCount(true)
-//       return nextIp
-//     }
-//   }
-//   let condition = true
-//   while (condition) {
-//     outPoly.push(nextEdge.p2.p)
-//     nextEdge = nextEdge.nextEdge
-//     if (nextEdge === null) return intersectionPoint
-//     else if (nextEdge.intersectionPoints.length > 0) condition = false
-//   }
-//   if (nextEdge === undefined) return intersectionPoint
-//   const lastIntersection = nextEdge.intersectionPoints[0]
-//   lastIntersection.incrementVisitCount(true)
-//   outPoly.push(lastIntersection.p)
-//   return lastIntersection
-// }
-
+function tidyEndOfLine (lastEdge: Edge | null, portionLine: Position[], allPortions: Position[][]) {
+  if (lastEdge) {
+    if (!lastEdge.p2.isSamePoint(portionLine[0])) {
+      portionLine.push(lastEdge.p2.p)
+      allPortions.push(portionLine)
+    }
+  }
+}
